@@ -21,7 +21,7 @@ This project satisfies the assignment requirements for:
 
 ## Deployment
 
-- Vercel URL: [https://swe-task-manager-vzj4-lctwa29pu-mandeep-khatris-projects.vercel.app](https://swe-task-manager-vzj4-lctwa29pu-mandeep-khatris-projects.vercel.app)
+- Vercel URL: [https://swe-task-manager-vzj4.vercel.app](https://swe-task-manager-vzj4.vercel.app)
 
 ## Project Structure
 
