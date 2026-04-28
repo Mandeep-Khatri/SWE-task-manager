@@ -6,6 +6,7 @@
       "use": "@vercel/python",
       "config": {
         "includeFiles": [
+          "source_code/**/*.py",
           "source_code/templates/**",
           "source_code/static/**",
           "data/task_manager_data.json"
