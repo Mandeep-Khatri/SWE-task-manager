@@ -1,0 +1,29 @@
+{
+  "users": {
+    "mandeeppaudel00@gmail.com": {
+      "password_hash": "e897ecfc19e54aebcca5be5c0273a1f3b6fd87417f045b1317a83dfb681e0ad4",
+      "tasks": [
+        {
+          "id": 1,
+          "title": "Need to attend office in NYC",
+          "description": "time: 8: AM",
+          "due_date": "2026-04-27",
+          "priority": "high",
+          "status": "incomplete"
+        }
+      ]
+    },
+    "bvmnk": {
+      "password_hash": "3f7c54571faee024e3fd68603c5c95f6a4c8ef73a398840b974f3f57737a116f",
+      "tasks": []
+    },
+    "dykih": {
+      "password_hash": "0219667e20157d59031f7688df32d9adf10c46e5c31eb0d213f90ef1e5f4bdb8",
+      "tasks": []
+    },
+    "mmm": {
+      "password_hash": "2ac9a6746aca543af8dff39894cfe8173afba21eb01c6fae33d52947222855ef",
+      "tasks": []
+    }
+  }
+}

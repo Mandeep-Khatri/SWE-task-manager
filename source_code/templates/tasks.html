@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="stats-grid">
+    <article class="stat-card">
+      <p>Total Tasks</p>
+      <h3>{{ tasks|length }}</h3>
+    </article>
+    <article class="stat-card">
+      <p>Completed</p>
+      <h3>{{ tasks|selectattr('status', 'equalto', 'complete')|list|length }}</h3>
+    </article>
+    <article class="stat-card">
+      <p>Pending</p>
+      <h3>{{ tasks|selectattr('status', 'equalto', 'incomplete')|list|length }}</h3>
+    </article>
+  </section>
+
+  <section class="card">
+    <h2>Add Task</h2>
+    <form method="post" action="{{ url_for('add_task') }}" class="form-grid">
+      <label>Title</label>
+      <input type="text" name="title" required>
+
+      <label>Description</label>
+      <textarea name="description" required></textarea>
+
+      <label>Due Date</label>
+      <input type="date" name="due_date" required>
+
+      <label>Priority</label>
+      <select name="priority" required>
+        <option value="">Select</option>
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+      </select>
+
+      <button class="button" type="submit">Add Task</button>
+    </form>
+  </section>
+
+  <section class="card">
+    <h2>Search and Filter</h2>
+    <form method="get" action="{{ url_for('tasks') }}" class="filters">
+      <input type="text" name="keyword" placeholder="Keyword" value="{{ keyword }}">
+      <select name="priority">
+        <option value="">All Priorities</option>
+        {% for p in priorities %}
+          <option value="{{ p }}" {% if priority == p %}selected{% endif %}>{{ p.title() }}</option>
+        {% endfor %}
+      </select>
+      <select name="status">
+        <option value="">All Statuses</option>
+        {% for s in statuses %}
+          <option value="{{ s }}" {% if status == s %}selected{% endif %}>{{ s.title() }}</option>
+        {% endfor %}
+      </select>
+      <button class="button" type="submit">Apply</button>
+      <a class="button light" href="{{ url_for('tasks') }}">Clear</a>
+    </form>
+  </section>
+
+  <section class="card">
+    <h2>Your Tasks</h2>
+    {% if tasks %}
+      <div class="task-list">
+        {% for task in tasks %}
+          <article class="task-item priority-{{ task.priority }}">
+            <div class="task-head">
+              <h3>{{ task.title }}</h3>
+              <div class="pill-wrap">
+                <span class="badge priority">{{ task.priority.title() }}</span>
+                <span class="badge {{ task.status }}">{{ task.status.title() }}</span>
+              </div>
+            </div>
+            <p>{{ task.description }}</p>
+            <p class="meta-line"><strong>Task #{{ task.id }}</strong> | Due {{ task.due_date }}</p>
+
+            <div class="actions">
+              <form method="post" action="{{ url_for('toggle_status', task_id=task.id) }}">
+                <button class="button light" type="submit">
+                  {% if task.status == "complete" %}Mark Incomplete{% else %}Mark Complete{% endif %}
+                </button>
+              </form>
+
+              <form method="post" action="{{ url_for('delete_task', task_id=task.id) }}">
+                <button class="button danger" type="submit">Delete</button>
+              </form>
+            </div>
+
+            <details>
+              <summary>Edit task</summary>
+              <form method="post" action="{{ url_for('edit_task', task_id=task.id) }}" class="form-grid">
+                <label>Title</label>
+                <input type="text" name="title" value="{{ task.title }}" required>
+
+                <label>Description</label>
+                <textarea name="description" required>{{ task.description }}</textarea>
+
+                <label>Due Date</label>
+                <input type="date" name="due_date" value="{{ task.due_date }}" required>
+
+                <label>Priority</label>
+                <select name="priority" required>
+                  <option value="low" {% if task.priority == "low" %}selected{% endif %}>Low</option>
+                  <option value="medium" {% if task.priority == "medium" %}selected{% endif %}>Medium</option>
+                  <option value="high" {% if task.priority == "high" %}selected{% endif %}>High</option>
+                </select>
+
+                <label>Status</label>
+                <select name="status" required>
+                  <option value="incomplete" {% if task.status == "incomplete" %}selected{% endif %}>Incomplete</option>
+                  <option value="complete" {% if task.status == "complete" %}selected{% endif %}>Complete</option>
+                </select>
+
+                <button class="button" type="submit">Save Changes</button>
+              </form>
+            </details>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>No tasks found.</p>
+    {% endif %}
+  </section>
+{% endblock %}
