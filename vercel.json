@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "source_code/app.py",
+      "src": "app.py",
       "use": "@vercel/python",
       "config": {
         "includeFiles": [
@@ -16,7 +16,7 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "source_code/app.py"
+      "dest": "app.py"
     }
   ]
 }
