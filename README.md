@@ -19,6 +19,10 @@ This project satisfies the assignment requirements for:
 - CSS
 - JSON file storage
 
+## Deployment
+
+- Vercel URL: [https://swe-task-manager-vzj4-lctwa29pu-mandeep-khatris-projects.vercel.app](https://swe-task-manager-vzj4-lctwa29pu-mandeep-khatris-projects.vercel.app)
+
 ## Project Structure
 
 ```text
