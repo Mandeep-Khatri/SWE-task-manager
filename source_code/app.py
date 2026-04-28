@@ -1,5 +1,6 @@
 from datetime import datetime
 from functools import wraps
+import os
 from typing import Dict, List, Optional
 
 from flask import Flask, flash, redirect, render_template, request, session, url_for
@@ -13,9 +14,13 @@ from task_manager import (
     save_data,
 )
 
-
-app = Flask(__name__)
-app.secret_key = "change-this-secret-key-in-production"
+BASE_DIR = os.path.dirname(__file__)
+app = Flask(
+    __name__,
+    template_folder=os.path.join(BASE_DIR, "templates"),
+    static_folder=os.path.join(BASE_DIR, "static"),
+)
+app.secret_key = os.getenv("SECRET_KEY", "change-this-secret-key-in-production")
 
 
 def login_required(view_func):
