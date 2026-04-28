@@ -11,15 +11,18 @@ BASE_DIR = os.path.dirname(__file__)
 BUNDLED_DATA_FILE = os.path.abspath(
     os.path.join(BASE_DIR, "..", "data", "task_manager_data.json")
 )
+SERVERLESS_DATA_FILE = "/tmp/task_manager_data.json"
 
 
 def resolve_data_file() -> str:
     env_file = os.getenv("TASK_MANAGER_DATA_FILE")
     if env_file:
         return env_file
-    if os.getenv("VERCEL"):
-        # Vercel allows writes in /tmp only.
-        return "/tmp/task_manager_data.json"
+    if os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME"):
+        # Serverless environments allow writes in /tmp only.
+        return SERVERLESS_DATA_FILE
+    if not os.access(os.path.dirname(BUNDLED_DATA_FILE), os.W_OK):
+        return SERVERLESS_DATA_FILE
     return BUNDLED_DATA_FILE
 
 
@@ -44,6 +47,18 @@ def load_data() -> Dict:
 
 
 def save_data(data: Dict) -> None:
+    global DATA_FILE
+    try:
+        with open(DATA_FILE, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2)
+        return
+    except OSError:
+        if DATA_FILE == SERVERLESS_DATA_FILE:
+            raise
+
+    # Fallback for read-only filesystems.
+    DATA_FILE = SERVERLESS_DATA_FILE
+    os.makedirs(os.path.dirname(DATA_FILE), exist_ok=True)
     with open(DATA_FILE, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2)
 
