@@ -2,11 +2,28 @@ import getpass
 import hashlib
 import json
 import os
+import shutil
 from datetime import datetime
 from typing import Dict, List, Optional
 
 
-DATA_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "task_manager_data.json")
+BASE_DIR = os.path.dirname(__file__)
+BUNDLED_DATA_FILE = os.path.abspath(
+    os.path.join(BASE_DIR, "..", "data", "task_manager_data.json")
+)
+
+
+def resolve_data_file() -> str:
+    env_file = os.getenv("TASK_MANAGER_DATA_FILE")
+    if env_file:
+        return env_file
+    if os.getenv("VERCEL"):
+        # Vercel allows writes in /tmp only.
+        return "/tmp/task_manager_data.json"
+    return BUNDLED_DATA_FILE
+
+
+DATA_FILE = resolve_data_file()
 PRIORITIES = {"low", "medium", "high"}
 STATUS_OPTIONS = {"incomplete", "complete"}
 
@@ -14,7 +31,10 @@ STATUS_OPTIONS = {"incomplete", "complete"}
 def ensure_data_file() -> None:
     os.makedirs(os.path.dirname(DATA_FILE), exist_ok=True)
     if not os.path.exists(DATA_FILE):
-        save_data({"users": {}})
+        if DATA_FILE != BUNDLED_DATA_FILE and os.path.exists(BUNDLED_DATA_FILE):
+            shutil.copyfile(BUNDLED_DATA_FILE, DATA_FILE)
+        else:
+            save_data({"users": {}})
 
 
 def load_data() -> Dict:
